@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+
+import com.scienstechnologies.newsfeed.NewsPage.PageFragment;
+import com.scienstechnologies.newsfeed.PageTransformer.DepthPageTransformer;
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -43,16 +49,10 @@ public class MainActivity extends AppCompatActivity {
         //instantiate a viewpager and a pageradapter
 
         mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
 
-        ImageView ivPageImage = (ImageView) findViewById(R.id.iv_page_image);
-
-        ivPageImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ShareActivity.class);
-                startActivity(i);
-            }
-        });
+        mPager.setPageTransformer(true, new DepthPageTransformer());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -85,4 +85,26 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment Objects, in sequence.
+     */
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        public ScreenSlidePagerAdapter(FragmentManager fm){
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new PageFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return num_pages;
+        }
+    }
+
+
 }
